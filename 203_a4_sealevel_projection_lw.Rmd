@@ -200,7 +200,7 @@ flood_p_storm3_highrise
 
 ```{r}
 # Put into a single dataframe!! yayyyyy
-clim_data <- data.frame(tide, storm_surge, mean_sea_level_rise, flood_probability)
+clim_data <- data.frame(tide, storm_surge, climate_variation, mean_sea_level_rise,  flood_probability)
 ```
 
 
