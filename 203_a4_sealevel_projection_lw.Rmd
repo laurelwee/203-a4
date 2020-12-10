@@ -1,0 +1,207 @@
+---
+title: 'Assignment 4: Sea-level projection'
+author: "Laurel Wee"
+date: "12/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries}
+library(lubridate)
+library(ggplot2)
+library(tidyverse)
+library(janitor)
+```
+
+```{r rnorm}
+# Generate random sea level values
+clim=rnorm(1000,mean = 0, sd = 3)
+
+# Find the ones that cause a flood
+flood=100*length(which(clim >= 5))/length(clim)
+flood
+
+# High tide 
+
+clim_hightide = rnorm(1000, mean = 1.25, sd = 3)
+flood_hightide =100*length(which(clim_hightide>=5))/length(clim_hightide)
+flood_hightide
+
+# Low tide 
+clim_lowtide = rnorm(1000, mean = -1.25, sd = 3)
+flood_lowtide =100*length(which(clim_lowtide>=5))/length(clim_lowtide)
+flood_lowtide
+
+# Mid tide
+clim_midtide = rnorm(1000, mean = 0, sd = 3)
+flood_midtide =100*length(which(clim_midtide>=5))/length(clim_midtide)
+flood_midtide
+
+# High tide and storm surges (normal conditions without climate variation)
+# 1m 
+clim_storm1_hightide = rnorm(1000, mean = 2.25, sd = 3)
+flood_storm1_hightide =100*length(which(clim_storm1_hightide>=5))/length(clim_storm1_hightide)
+flood_storm1_hightide
+
+# 2m 
+clim_storm2_hightide = rnorm(1000, mean = 3.25, sd = 3)
+flood_storm2_hightide =100*length(which(clim_storm2_hightide>=5))/length(clim_storm2_hightide)
+flood_storm2_hightide
+
+# 3m
+clim_storm3_hightide = rnorm(1000, mean = 4.25, sd = 3)
+flood_storm3_hightide =100*length(which(clim_storm3_hightide>=5))/length(clim_storm3_hightide)
+flood_storm3_hightide
+```
+The total RISK of flooding is then the proportion of time that floods occur. 
+
+To include the effects of storm surge (or climate change), you would then add the relevant increase to your randomly generated sea level values, and repeat the same calculation.
+
+```{r}
+###tide, storm surges, and climate variation
+## Lower-estimate climate variation
+# low tide, 1m and low (7in)
+clim_n_storm1_lowrise = rnorm(1000, mean = -0.0722, sd = 3)
+flood_n_storm1_lowrise =100*length(which(clim_n_storm1_lowrise>=5))/length(clim_n_storm1_lowrise)
+flood_n_storm1_lowrise
+# middle tide, 1m and low (7in)
+clim_storm1_lowrise = rnorm(1000, mean = 1.1778, sd = 3)
+flood_storm1_lowrise =100*length(which(clim_storm1_lowrise>=5))/length(clim_storm1_lowrise)
+flood_storm1_lowrise
+# high tide, 1m and low (7in)
+clim_p_storm1_lowrise = rnorm(1000, mean = 2.4278, sd = 3)
+flood_p_storm1_lowrise =100*length(which(clim_p_storm1_lowrise>=5))/length(clim_p_storm1_lowrise)
+flood_p_storm1_lowrise
+
+# low tide, 2m and low (7in)
+clim_n_storm2_lowrise = rnorm(1000, mean = 0.9278, sd = 3)
+flood_n_storm2_lowrise =100*length(which(clim_n_storm2_lowrise>=5))/length(clim_n_storm2_lowrise)
+flood_n_storm2_lowrisep
+# middle tide, 2m and low (7in)
+clim_storm2_lowrise = rnorm(1000, mean = 2.1778, sd = 3)
+flood_storm2_lowrise =100*length(which(clim_storm2_lowrise>=5))/length(clim_storm2_lowrise)
+flood_storm2_lowrise
+# high tide, 2m and low (7in)
+clim_p_storm2_lowrise = rnorm(1000, mean = 3.4278, sd = 3)
+flood_p_storm2_lowrise =100*length(which(clim_p_storm2_lowrise>=5))/length(clim_p_storm2_lowrise)
+flood_p_storm2_lowrise
+
+# low tide, 3m and low (7in)
+clim_n_storm3_lowrise = rnorm(1000, mean = 1.9278, sd = 3)
+flood_n_storm3_lowrise =100*length(which(clim_n_storm3_lowrise>=5))/length(clim_n_storm3_lowrise)
+flood_n_storm3_lowrise
+# middle tide, 3m and low (7in)
+clim_storm3_lowrise = rnorm(1000, mean = 3.1778, sd = 3)
+flood_storm3_lowrise =100*length(which(clim_storm3_lowrise>=5))/length(clim_storm3_lowrise)
+flood_storm3_lowrise
+# high tide, 3m and low (7in)
+clim_p_storm3_lowrise = rnorm(1000, mean = 4.4278, sd = 3)
+flood_p_storm3_lowrise =100*length(which(clim_p_storm3_lowrise>=5))/length(clim_p_storm3_lowrise)
+flood_p_storm3_lowrise
+
+
+
+## Higher-estimate climate variation
+# low tide, 1m and high (31in)
+clim_n_storm1_highrise = rnorm(1000, mean = 0.5374, sd = 3)
+flood_n_storm1_highrise =100*length(which(clim_n_storm1_highrise>=5))/length(clim_n_storm1_highrise)
+flood_n_storm1_highrise
+# middle tide, 1m and high (31in)
+clim_storm1_highrise = rnorm(1000, mean = 1.7874, sd = 3)
+flood_storm1_highrise =100*length(which(clim_storm1_highrise>=5))/length(clim_storm1_highrise)
+flood_storm1_highrise
+# high tide, 1m and high (31in)
+clim_p_storm1_highrise = rnorm(1000, mean = 3.0374, sd = 3)
+flood_p_storm1_highrise =100*length(which(clim_p_storm1_highrise>=5))/length(clim_p_storm1_highrise)
+flood_p_storm1_highrise
+
+# low tide, 2m and high (31in)
+clim_n_storm2_highrise = rnorm(1000, mean = 1.5374, sd = 3)
+flood_n_storm2_highrise =100*length(which(clim_n_storm2_highrise>=5))/length(clim_n_storm2_highrise)
+flood_n_storm2_highrise
+# middle tide, 2m and high (31in)
+clim_storm2_highrise = rnorm(1000, mean = 2.7874, sd = 3)
+flood_storm2_highrise =100*length(which(clim_storm2_highrise>=5))/length(clim_storm2_highrise)
+flood_storm2_highrise
+# high tide, 2m and high (31in)
+clim_p_storm2_highrise = rnorm(1000, mean = 4.0374, sd = 3)
+flood_p_storm2_highrise =100*length(which(clim_p_storm2_highrise>=5))/length(clim_p_storm2_highrise)
+flood_p_storm2_highrise
+
+
+# low tide, 3m and high (31in)
+clim_n_storm3_highrise = rnorm(1000, mean = 2.5374, sd = 3)
+flood_n_storm3_highrise =100*length(which(clim_n_storm3_highrise>=5))/length(clim_n_storm3_highrise)
+flood_n_storm3_highrise
+# middle tide, 3m and high (31in)
+clim_storm3_highrise = rnorm(1000, mean = 3.7874, sd = 3)
+flood_storm3_highrise =100*length(which(clim_storm3_highrise>=5))/length(clim_storm3_highrise)
+flood_storm3_highrise
+# high tide, 3m and high (31in)
+clim_p_storm3_highrise = rnorm(1000, mean = 5.0374, sd = 3)
+flood_p_storm3_highrise =100*length(which(clim_p_storm3_highrise>=5))/length(clim_p_storm3_highrise)
+flood_p_storm3_highrise
+
+```
+
+
+```{r}
+# Just climate variations, midtide
+# low
+clim_lowrise = rnorm(1000, mean = .1778, sd = 3)
+flood_lowrise =100*length(which(clim_lowrise>=5))/length(clim_lowrise)
+flood_lowrise
+
+#high
+clim_highrise = rnorm(1000, mean = .7874, sd = 3)
+flood_highrise =100*length(which(clim_highrise>=5))/length(clim_highrise)
+flood_highrise
+```
+
+```{r}
+# Vectors!
+
+tide <- c("low","middle","high","low","middle","high","low","middle","high","low","middle","high","low","middle","high","low","middle","high")
+
+storm_surge <-c("1","1","1","2","2","2","3","3","3","1","1","1","2","2","2","3","3","3")
+
+climate_variation <-c("low","low","low","low","low","low","low","low","low","high","high","high","high","high","high","high","high","high")
+
+mean_sea_level_rise <- c('-0.0722','1.1778','2.4278','0.9278','2.1778','3.4278','1.9278','3.1778','4.4278','0.5374','1.7874','3.0374','1.5374','2.7874','4.0374','2.5374','3.7874','5.0374')
+
+flood_probability <- c(flood_n_storm1_lowrise,
+flood_storm1_lowrise,
+flood_p_storm1_lowrise,
+flood_n_storm2_lowrise,
+flood_storm2_lowrise,
+flood_n_storm2_lowrise,
+flood_n_storm3_lowrise,
+flood_storm3_lowrise,
+flood_p_storm3_lowrise,
+flood_n_storm1_highrise,
+flood_storm1_highrise,
+flood_p_storm1_highrise,
+flood_n_storm2_highrise,
+flood_storm2_highrise,
+flood_n_storm2_highrise,
+flood_n_storm3_highrise,
+flood_storm3_highrise,
+flood_p_storm3_highrise
+)
+
+#colnames(clim_table) %>% c("tide","storm_surge","climate_variation", "sea_level","flood_probability")
+```
+
+
+
+
+```{r}
+# Put into a single dataframe!! yayyyyy
+clim_data <- data.frame(tide, storm_surge, mean_sea_level_rise, flood_probability)
+```
+
+
+
