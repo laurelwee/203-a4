@@ -1,0 +1,38 @@
+---
+title: 'Assignment 4: alternative'
+author: "Laurel Wee"
+date: "12/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+storm_surge_1 = 1
+storm_surge_2 = 2
+
+
+# Tide
+tide_lo 
+tide_mid
+tide_high
+
+sea_level_current
+sea_level_lower
+sea_level_higher
+
+# Generate random sea levels 
+clim_var_rnorm(1000, mean = 0, sd = 3)
+
+# Current conditions 
+totals_base_lo = clim_var + sea_level_current +tide_lo 
+
+flood_risk_lo = 100*length(which(totals_base_lo >=5))/length(totals_base_lo)
+
+totals_base_hi
+
+
+```
+
